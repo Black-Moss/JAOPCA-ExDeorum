@@ -1,5 +1,8 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
 license="${mod_license}"
 issueTrackerURL = "https://github.com/Black-Moss/JAOPCA-ExDeorum/issues"
+
 
 [[mods]]
 modId = "${mod_id}"
@@ -18,11 +21,11 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
-modId="minecraft"
-type="required"
-versionRange="${minecraft_version_range}"
-ordering="NONE"
-side="BOTH"
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
 
 [[dependencies.${ mod_id }]]
 modId = "jaopca"
