@@ -173,7 +173,7 @@ public class ExDeorumCompatModule implements IModule {
             }
             if (addSieveRecipes) {
                 for (MeshDrop meshDrop : MESH_DROPS) {
-                    Item mesh = BuiltInRegistries.ITEM.getValue(ResourceLocation.fromNamespaceAndPath("exdeorum", meshDrop.meshName()));
+                    Item mesh = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("exdeorum", meshDrop.meshName()));
                     if (mesh == Items.AIR) {
                         continue;
                     }
