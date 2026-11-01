@@ -26,7 +26,7 @@ import thelm.jaopca.utils.MiscHelper;
 import java.util.*;
 
 @JAOPCAModule(modDependencies = "exdeorum")
-public class ExDeorumModule implements IModule {
+public class ExDeorumCompatModule implements IModule {
     public static final String FORM_NAME = "exdeorum_ore_chunk";
 
     private static final Set<String> BLACKLIST = new TreeSet<>(List.of(
