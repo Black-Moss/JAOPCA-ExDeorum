@@ -57,6 +57,8 @@ public class ExDeorumModule implements IModule {
             "uranium",
             "zinc"));
 
+    private static final Identifier COMPRESSED_GRAVEL = Identifier.parse("exdeorum:compressed/gravel");
+
     private static final List<MeshDrop> MESH_DROPS = List.of(
             new MeshDrop("string_mesh", "string", 0.04F),
             new MeshDrop("flint_mesh", "flint", 0.05F),
@@ -70,7 +72,7 @@ public class ExDeorumModule implements IModule {
     private static double sieveChanceScale = 1.0;
     private static IDynamicSpecConfig moduleConfig;
     private final IForm oreChunkForm = ApiImpl.INSTANCE.newForm(this, FORM_NAME, ItemFormType.INSTANCE).
-            setMaterialTypes(MaterialType.INGOT, MaterialType.INGOT_LEGACY).
+            setMaterialTypes(MaterialType.INGOT).
             setSecondaryName("exdeorum:ore_chunks").
             setDefaultMaterialBlacklist(BLACKLIST);
 
@@ -116,7 +118,7 @@ public class ExDeorumModule implements IModule {
 
     @Override
     public Set<MaterialType> getMaterialTypes() {
-        return EnumSet.of(MaterialType.INGOT, MaterialType.INGOT_LEGACY);
+        return EnumSet.of(MaterialType.INGOT);
     }
 
     @Override
@@ -151,9 +153,12 @@ public class ExDeorumModule implements IModule {
                 continue;
             }
             Identifier oreLocation = miscHelper.getTagLocation("ores", material.getName());
-            if (!itemTags.contains(oreLocation)) {
-                JAOPCAExDeorum.LOGGER.warn("Skipping Ex Deorum ore chunk for material {} since the ore tag {} does not exist",
-                        material.getName(), oreLocation);
+            Identifier rawMaterialLocation = miscHelper.getTagLocation("raw_materials", material.getName());
+            Identifier ingotLocation = miscHelper.getTagLocation(material.getType().getFormName(), material.getName());
+            if (!itemTags.contains(oreLocation) || !itemTags.contains(rawMaterialLocation) || !itemTags.contains(ingotLocation)) {
+                JAOPCAExDeorum.LOGGER.warn(
+                        "Skipping Ex Deorum ore chunk for material {} since it lacks the ore tag {}, raw ore tag {} or ingot tag {}",
+                        material.getName(), oreLocation, rawMaterialLocation, ingotLocation);
                 continue;
             }
             ++chunkCount;
@@ -172,14 +177,13 @@ public class ExDeorumModule implements IModule {
                     if (helper.registerSieveRecipe(
                             Identifier.fromNamespaceAndPath("exdeorum",
                                     "sieve/gravel/" + meshDrop.folderName() + '/' + material.getName() + "_ore_chunk"),
-                            miscHelper.getIngredient(Items.GRAVEL), chunkInfo, 1, 1, chance, mesh)) {
+                            Items.GRAVEL, chunkInfo, 1, 1, chance, mesh)) {
                         ++recipeCount;
                     }
                     if (addCompressedSieveRecipes && helper.registerCompressedSieveRecipe(
                             Identifier.fromNamespaceAndPath("exdeorum",
                                     "compressed_sieve/gravel/" + meshDrop.folderName() + '/' + material.getName() + "_ore_chunk"),
-                            miscHelper.getIngredient(Identifier.parse("exdeorum:compressed/gravel")),
-                            chunkInfo, 1, 7, chance, mesh)) {
+                            COMPRESSED_GRAVEL, chunkInfo, 1, 7, chance, mesh)) {
                         ++recipeCount;
                     }
                 }
