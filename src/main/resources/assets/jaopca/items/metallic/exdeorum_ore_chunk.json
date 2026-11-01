@@ -4,6 +4,10 @@
     "model": "jaopca:item/metallic/exdeorum_ore_chunk",
     "tints": [
       {
+        "type": "minecraft:constant",
+        "value": -1
+      },
+      {
         "type": "jaopca:material_form"
       }
     ]
