@@ -1,5 +1,6 @@
 package com.blackmoss.jaopcaexdeorum;
 
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -14,5 +15,10 @@ public class JAOPCAExDeorum {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public JAOPCAExDeorum(IEventBus modEventBus, ModContainer modContainer) {
+    }
+
+    public static ResourceLocation identifier(String path)
+    {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 }
