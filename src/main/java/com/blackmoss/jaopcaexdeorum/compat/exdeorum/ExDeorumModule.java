@@ -3,9 +3,9 @@ package com.blackmoss.jaopcaexdeorum.compat.exdeorum;
 import com.blackmoss.jaopcaexdeorum.JAOPCAExDeorum;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import thelm.jaopca.api.JAOPCAApi;
 import thelm.jaopca.api.config.IDynamicSpecConfig;
@@ -162,9 +162,13 @@ public class ExDeorumModule implements IModule {
                 continue;
             }
             ++chunkCount;
-            TagKey<Item> oreTag = miscHelper.getItemTagKey(oreLocation);
-            if (helper.registerOreChunkRecipe(
-                    Identifier.fromNamespaceAndPath("exdeorum", material.getName() + "_from_chunks"), chunkInfo, oreTag)) {
+            if (api.registerShapedRecipe(
+                    Identifier.fromNamespaceAndPath("exdeorum", material.getName() + "_from_chunks"),
+                    CraftingBookCategory.BUILDING,
+                    oreLocation, 1,
+                    "CC",
+                    "CC",
+                    'C', chunkInfo)) {
                 ++recipeCount;
             }
             if (addSieveRecipes) {
