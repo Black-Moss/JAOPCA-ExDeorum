@@ -64,20 +64,45 @@ public class ExDeorumModule implements IModule {
             new MeshDrop("golden_mesh", "golden", 0.07F),
             new MeshDrop("diamond_mesh", "diamond", 0.08F),
             new MeshDrop("netherite_mesh", "netherite", 0.09F));
-
-    private record MeshDrop(String meshName, String folderName, float chance) {
-    }
-
+    private static final Set<String> EXTRA_BLACKLIST = new TreeSet<>();
     private static boolean addSieveRecipes = true;
     private static boolean addCompressedSieveRecipes = true;
     private static double sieveChanceScale = 1.0;
-    private static final Set<String> EXTRA_BLACKLIST = new TreeSet<>();
     private static IDynamicSpecConfig moduleConfig;
-
     private final IForm oreChunkForm = ApiImpl.INSTANCE.newForm(this, FORM_NAME, ItemFormType.INSTANCE).
             setMaterialTypes(MaterialType.INGOT, MaterialType.INGOT_LEGACY).
             setSecondaryName("exdeorum:ore_chunks").
             setDefaultMaterialBlacklist(BLACKLIST);
+
+    private static void readModuleConfig(IDynamicSpecConfig config) {
+        addSieveRecipes = config.getDefinedBoolean("recipes.sieve_recipes", addSieveRecipes,
+                "Should sieve recipes dropping Ex Deorum ore chunks from sieving gravel be added.");
+        addCompressedSieveRecipes = config.getDefinedBoolean("recipes.compressed_sieve_recipes", addCompressedSieveRecipes,
+                "Should compressed sieve recipes dropping Ex Deorum ore chunks be added.");
+        sieveChanceScale = config.getDefinedDouble("recipes.sieve_chance_scale", sieveChanceScale, 0.0, 1.0,
+                "Scales the chance of Ex Deorum ore chunks dropping from sieves.");
+        List<String> extraBlacklist = config.getDefinedStringList("recipes.material_blacklist", new ArrayList<>(),
+                MiscHelper.INSTANCE.configMaterialPredicate(),
+                "Extra materials that should not get Ex Deorum ore chunks.");
+        EXTRA_BLACKLIST.clear();
+        MiscHelper.INSTANCE.caclulateMaterialSet(extraBlacklist, EXTRA_BLACKLIST);
+    }
+
+    private static boolean isSkipped(IMaterial material) {
+        return matches(material, EXTRA_BLACKLIST) || matches(material, BLACKLIST);
+    }
+
+    private static boolean matches(IMaterial material, Set<String> names) {
+        if (names.contains(material.getName())) {
+            return true;
+        }
+        for (String alternativeName : material.getAlternativeNames()) {
+            if (names.contains(alternativeName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public String getName() {
@@ -103,20 +128,6 @@ public class ExDeorumModule implements IModule {
     public void defineModuleConfig(IModuleData moduleData, IDynamicSpecConfig config) {
         moduleConfig = Objects.requireNonNull(config);
         readModuleConfig(config);
-    }
-
-    private static void readModuleConfig(IDynamicSpecConfig config) {
-        addSieveRecipes = config.getDefinedBoolean("recipes.sieve_recipes", addSieveRecipes,
-                "Should sieve recipes dropping Ex Deorum ore chunks from sieving gravel be added.");
-        addCompressedSieveRecipes = config.getDefinedBoolean("recipes.compressed_sieve_recipes", addCompressedSieveRecipes,
-                "Should compressed sieve recipes dropping Ex Deorum ore chunks be added.");
-        sieveChanceScale = config.getDefinedDouble("recipes.sieve_chance_scale", sieveChanceScale, 0.0, 1.0,
-                "Scales the chance of Ex Deorum ore chunks dropping from sieves.");
-        List<String> extraBlacklist = config.getDefinedStringList("recipes.material_blacklist", new ArrayList<>(),
-                MiscHelper.INSTANCE.configMaterialPredicate(),
-                "Extra materials that should not get Ex Deorum ore chunks.");
-        EXTRA_BLACKLIST.clear();
-        MiscHelper.INSTANCE.caclulateMaterialSet(extraBlacklist, EXTRA_BLACKLIST);
     }
 
     @Override
@@ -177,19 +188,6 @@ public class ExDeorumModule implements IModule {
         JAOPCAExDeorum.LOGGER.info("Registered Ex Deorum ore chunks for {} materials with {} recipes", chunkCount, recipeCount);
     }
 
-    private static boolean isSkipped(IMaterial material) {
-        return matches(material, EXTRA_BLACKLIST) || matches(material, BLACKLIST);
-    }
-
-    private static boolean matches(IMaterial material, Set<String> names) {
-        if (names.contains(material.getName())) {
-            return true;
-        }
-        for (String alternativeName : material.getAlternativeNames()) {
-            if (names.contains(alternativeName)) {
-                return true;
-            }
-        }
-        return false;
+    private record MeshDrop(String meshName, String folderName, float chance) {
     }
 }

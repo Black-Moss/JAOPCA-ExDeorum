@@ -2,8 +2,8 @@ package com.blackmoss.jaopcaexdeorum.compat.exdeorum.recipes;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
-import thelm.jaopca.utils.MiscHelper;
 import thedarkcolour.exdeorum.recipe.sieve.CompressedSieveRecipe;
+import thelm.jaopca.utils.MiscHelper;
 
 public class CompressedSieveRecipeSerializer extends SieveRecipeSerializer {
     public CompressedSieveRecipeSerializer(Identifier key, Object input, Object result, int resultCount, int rolls, float chance, Object mesh) {

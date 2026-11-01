@@ -1,18 +1,18 @@
 package com.blackmoss.jaopcaexdeorum.compat.exdeorum;
 
+import com.blackmoss.jaopcaexdeorum.compat.exdeorum.recipes.CompressedSieveRecipeSerializer;
+import com.blackmoss.jaopcaexdeorum.compat.exdeorum.recipes.OreChunkRecipeSerializer;
+import com.blackmoss.jaopcaexdeorum.compat.exdeorum.recipes.SieveRecipeSerializer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import thelm.jaopca.utils.ApiImpl;
 
-import com.blackmoss.jaopcaexdeorum.compat.exdeorum.recipes.CompressedSieveRecipeSerializer;
-import com.blackmoss.jaopcaexdeorum.compat.exdeorum.recipes.OreChunkRecipeSerializer;
-import com.blackmoss.jaopcaexdeorum.compat.exdeorum.recipes.SieveRecipeSerializer;
-
 public class ExDeorumHelper {
     public static final ExDeorumHelper INSTANCE = new ExDeorumHelper();
 
-    private ExDeorumHelper() {}
+    private ExDeorumHelper() {
+    }
 
     public boolean registerOreChunkRecipe(Identifier key, Object oreChunk, TagKey<Item> ore) {
         return ApiImpl.INSTANCE.registerRecipe(key, new OreChunkRecipeSerializer(key, oreChunk, ore));

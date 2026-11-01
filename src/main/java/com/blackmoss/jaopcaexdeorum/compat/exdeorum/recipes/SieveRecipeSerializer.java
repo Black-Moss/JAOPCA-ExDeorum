@@ -1,16 +1,15 @@
 package com.blackmoss.jaopcaexdeorum.compat.exdeorum.recipes;
 
-import java.util.Objects;
-
 import com.google.gson.JsonElement;
-
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
+import thedarkcolour.exdeorum.recipe.sieve.SieveRecipe;
 import thelm.jaopca.api.recipes.IRecipeSerializer;
 import thelm.jaopca.utils.MiscHelper;
-import thedarkcolour.exdeorum.recipe.sieve.SieveRecipe;
+
+import java.util.Objects;
 
 public class SieveRecipeSerializer implements IRecipeSerializer {
     public final Identifier key;
@@ -43,16 +42,16 @@ public class SieveRecipeSerializer implements IRecipeSerializer {
 
     protected ItemStackTemplate resolveResult() {
         ItemStackTemplate stack = MiscHelper.INSTANCE.getItemStackTemplate(result, resultCount);
-        if(stack == null) {
-            throw new IllegalArgumentException("Empty result in recipe "+key+": "+result);
+        if (stack == null) {
+            throw new IllegalArgumentException("Empty result in recipe " + key + ": " + result);
         }
         return stack;
     }
 
     protected Ingredient resolveIngredient(Object obj, String name) {
         Ingredient ingredient = MiscHelper.INSTANCE.getIngredient(obj);
-        if(ingredient == null) {
-            throw new IllegalArgumentException("Empty "+name+" in recipe "+key+": "+obj);
+        if (ingredient == null) {
+            throw new IllegalArgumentException("Empty " + name + " in recipe " + key + ": " + obj);
         }
         return ingredient;
     }
